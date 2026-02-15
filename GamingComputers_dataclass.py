@@ -119,44 +119,75 @@ def add_computer_to_list(computers):
 
 
 def delete_computer(computers):
-    computer_id = input_int(1, 99999, "Введите ИД компютера, который вы хотите удалить: ")
-    computers.pop([computer_id - 1])
+    if len(computers) == 0:
+        print("Нет компьтеров для удаления")
+        return
+    
+    computer_id = input_int(1, len(computers), "Введите ИД компютера, который вы хотите удалить: ")
+    computers.pop(computer_id - 1)
+    for i in range(computer_id, len(computers)):
+        computers[i].id = i
+    global GLOBAL_GAMING_COMPUTER_ID
+    GLOBAL_GAMING_COMPUTER_ID -= 1
+
     print(f"\nКомпьютер с ИД {computer_id} был успешно удалён")
 
 
 def increase_ram(computers):
-    computer_id = input_int(0, 99999999999, "Введите ИД компьютера, которому вы хотите увеличить ОЗУ: ")
+    if len(computers) == 0:
+        print("Нет компьтеров для увеличения ОЗУ")
+        return
+    computer_id = input_int(1, len(computers), "Введите ИД компьютера, которому вы хотите увеличить ОЗУ: ")
     computer = computers[computer.id - 1]
 
-    ram = input_int(0, 99999999, "Введите на сколько вы хотите увеличить ОЗУ (ГБ) этому компьютеру: ")
+    ram = input_int(1, 99999999, "Введите на сколько вы хотите увеличить ОЗУ (ГБ) этому компьютеру: ")
 
     computer.RAM += ram
     print(f"\nУ компьютера с ИД {computer_id} успешно увеличено ОЗУ (ГБ) с {computer.RAM - ram} ГБ на {computer.RAM} ГБ")
 
 
 def set_sellout(computers):
-    input_int(1, 999, "test")
-    print("test")
+    if len(computers) == 0:
+        print("Нет компьтеров для пометки «распродажы»")
+        return
+    computer_id = input_int(1, len(computers), "Введите ИД компьютера, который вы хотите пометить как «распродажа»: ")
+    if computers[computer_id - 1].is_on_sellout == True:
+        print(f"Компьютер с ИД: {computer_id} уже на распродаже")
+        return
+    computers[computer_id - 1].is_on_sellout = True
+    computers[computer_id - 1].price *= 0.9
+    print(f"Компьютер с ИД: {computer_id} успешно помечен как «распродажа»")
 
 def print_most_expensive_and_cheapest(computers):
     cheapest_computer = computers[0]
     for i in range(len(computers)):
-            for j in range(len(computers) - 1):
-                if cheapest_computer.price > computers[j+1].price:
-                    cheapest_computer = computers[j+1]
+            if cheapest_computer.price > computers[i].price:
+                cheapest_computer = computers[i]
 
     most_expensive_computer = computers[0]
     for i in range(len(computers)):
-            for j in range(len(computers) - 1):
-                if most_expensive_computer.price < computers[j+1].price:
-                    most_expensive_computer = computers[j+1]
+            if most_expensive_computer.price < computers[i].price:
+                most_expensive_computer = computers[i]
     
     print_computer_information(cheapest_computer, "Самый дешёвый компьютер:")
     print_computer_information(most_expensive_computer, "Самый дорогой компьютер:")
 
 
-def name():
-    print("test")
+def print_min_VRAM():
+    min_VRAM = input_int(1, 999999999999, "Введите объём видеопамяти: ")
+
+    is_have_VRAM = False
+    for i in range(len(computers)):
+        if computers[i].VRAM >= min_VRAM:
+            is_have_VRAM = True
+
+    if is_have_VRAM == False:
+        print("Нет подходящих компьютеров")
+        return
+
+    for i in range(len(computers)):
+        if computers[i].VRAM >= min_VRAM:
+            print_computer_information(computers[i], "")
 
 
 def print_main_screen():
@@ -169,11 +200,13 @@ def print_main_screen():
     print("5 — Увеличение объёма ОЗУ у компьютера по ИД")
     print("6 — Пометить компьютер как «распродажа» → автоматически уменьшить цену на 10%")
     print("7 — Вывести самый дорогой и самый дешёвый компьютер")
-    print("8 — Вывести компьютеры с видеокартой не слабее указанной")
+    print("8 — Вывести компьютеры с объёмом видеопамяти не слабее указанной")
     print("9 — Выйти из программы\n")
     
 
 def main():
+
+    print(len(computers))
 
     clear_console()
     print_main_screen()
@@ -213,13 +246,13 @@ def main():
         time.sleep(10)
         main()
     elif user_choice == 8:
-        name()
+        print_min_VRAM()
         time.sleep(10)
         main()
     elif user_choice == 9:
         quit()
 
 
-computers = [GamingComputer(1,"22","22",99,22,33,2,999,2,False), GamingComputer(2,"22","22",200,300,999,999,9999,5,False), GamingComputer(1,"22","22",99,22,33,2,999,2,False)] 
+computers = [GamingComputer(1,"22","22",99,22,33,2,999,2,False), GamingComputer(2,"22","22",200,300,999,999,9999,5,False), GamingComputer(3,"22","22",99,22,33,2,999,2,False)] 
 
 main()
