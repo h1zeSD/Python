@@ -20,7 +20,15 @@ class Product:
         self.__price = price
     
     def get_info(self) -> str:
-        return f"Name: {self.__name}, Code: {self.__code}, Quantity: {self.__guantity}, Price: {self.__price}"
+        return f"Название: {self.__name}, Код: {self.__code}, Количество: {self.__guantity}, Цена: {self.__price}"
+
+    def get_data(self) -> dict:
+        return {
+            "name": self.__name,
+            "code": self.__code,
+            "guantity": self.__guantity,
+            "price": self.__price,
+        }
     
     def get_code(self) -> int:
         return self.__code
@@ -53,7 +61,10 @@ class Warehouse:
         self.__products.append(product)
 
     def remove_product_by_code(self, code: int) -> None:
-        self.__products.remove(self.get_product_by_code(code))
+        try:
+            self.__products.remove(self.get_product_by_code(code))
+        except ValueError:
+            print("Ошибка. Товара с таким кодом не существует")
 
     def print_all_products(self) -> None:
         for product in self.__products:
