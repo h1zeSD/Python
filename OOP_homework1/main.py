@@ -63,8 +63,8 @@ while is_running:
 
         print("Введите данные товара:\n")
         name = input("Название: ")
-        quantity = int(input("Количество: "))
-        price = int(input("Цена: "))
+        quantity = input_int(1, 9999999, "Количество: ")
+        price = input_int(1, 9999999, "Цена: ")
         warehouse.add_product(Product(name, GLOBAL_PRODUCT_CODE, quantity, price))
         GLOBAL_PRODUCT_CODE += 1
     elif user_choice == 3:
@@ -72,17 +72,28 @@ while is_running:
 
         code = int(input("Введите код товара: "))
         warehouse.remove_product_by_code(code)
+        input("\nЧтобы продолжить нажмите Enter: ")
     elif user_choice == 4:
         clear_console()
 
         code = int(input("Введите код товара: "))
         quantity = int(input("Введите количество: "))
-        warehouse.get_product_by_code(code).update_guantity(quantity)
+        try:
+            warehouse.get_product_by_code(code).update_price(quantity)
+        except AttributeError:
+            print("Ошибка. Товара с таким кодом не существует")
+
+        input("\nЧтобы продолжить нажмите Enter: ")
     elif user_choice == 5:
         clear_console()
 
         code = int(input("Введите код товара: "))
         price = int(input("Введите цену: "))
-        warehouse.get_product_by_code(code).update_price(price)
+        try:
+            warehouse.get_product_by_code(code).update_price(price)
+        except AttributeError:
+            print("Ошибка. Товара с таким кодом не существует")
+
+        input("\nЧтобы продолжить нажмите Enter: ")
     elif user_choice == 6:
         is_running = False
